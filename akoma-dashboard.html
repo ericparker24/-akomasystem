@@ -3,38 +3,753 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AkomaSystem — Live Dashboard</title>
+<title>AkomaSystem — Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0E0C09;--surface:#1A1610;--surface2:#221E17;
-  --gold:#C8973A;--gold-light:#E8B96A;--gold-dim:rgba(200,151,58,0.12);
-  --green-light:#4ADE80;--red-light:#FF6B6B;--amber:#E8A020;
-  --text:#F0E8D8;--text-dim:#8A7E6A;--border:rgba(200,151,58,0.15);
-}
+:root{--bg:#0E0C09;--surface:#1A1610;--surface2:#221E17;--gold:#C8973A;--gold-light:#E8B96A;--gold-dim:rgba(200,151,58,0.12);--green:#4ADE80;--red:#FF6B6B;--amber:#E8A020;--text:#F0E8D8;--muted:#8A7E6A;--border:rgba(200,151,58,0.15)}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
-
 /* SIDEBAR */
-.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
-.sidebar-logo{padding:28px 24px;border-bottom:1px solid var(--border)}
-.logo-symbol{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--gold);font-weight:700}
-.logo-sub{font-size:0.65rem;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase;margin-top:4px}
-.sidebar-nav{flex:1;padding:16px 0;overflow-y:auto}
-.nav-section{padding:8px 24px 4px;font-size:0.6rem;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase}
-.nav-item{display:flex;align-items:center;gap:12px;padding:10px 24px;cursor:pointer;font-size:0.85rem;color:var(--text-dim);transition:all 0.2s;border-left:3px solid transparent}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.sidebar-logo{padding:24px;border-bottom:1px solid var(--border)}
+.logo-sym{font-family:'Fraunces',serif;font-size:1.5rem;color:var(--gold);font-weight:700}
+.logo-sub{font-size:0.6rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-top:3px}
+.nav-section{padding:10px 24px 4px;font-size:0.6rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 24px;cursor:pointer;font-size:0.85rem;color:var(--muted);transition:all 0.2s;border-left:3px solid transparent;user-select:none}
 .nav-item:hover{color:var(--text);background:var(--gold-dim)}
 .nav-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim);font-weight:500}
-.nav-icon{font-size:1rem;width:20px;text-align:center}
-.sidebar-footer{padding:20px 24px;border-top:1px solid var(--border)}
-.company-badge{display:flex;align-items:center;gap:10px}
-.company-avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),#8B3A1C);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white}
-.company-name{font-size:0.8rem;font-weight:500}
-.company-plan{font-size:0.65rem;color:var(--gold)}
-
+.nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:20px 24px;border-top:1px solid var(--border);margin-top:auto}
+.co-badge{display:flex;align-items:center;gap:10px}
+.co-av{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),#8B3A1C);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.co-name{font-size:0.8rem;font-weight:500}
+.co-plan{font-size:0.65rem;color:var(--gold)}
 /* MAIN */
-.main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column}
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar h1{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600}
+.topbar p{font-size:0.72rem;color:var(--muted);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.badge{display:flex;align-items:center;gap:6px;border-radius:20px;padding:5px 12px;font-size:0.72rem;font-weight:500}
+.badge.live{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:var(--green)}
+.badge.fb{background:rgba(232,160,32,0.1);border:1px solid rgba(232,160,32,0.3);color:var(--amber)}
+.badge.fb.ok{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:var(--green)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.dot.blink{animation:pulse 1.5s infinite}
+.btn{padding:8px 16px;border-radius:8px;font-size:0.8rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;border:none;transition:all 0.2s}
+.btn-gold{background:var(--gold);color:#0E0C09}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-out:hover{border-color:var(--gold);color:var(--gold)}
+/* PAGES */
+.page{display:none}
+.page.show{display:block}
+.content{padding:28px}
+.page-hdr{margin-bottom:22px}
+.page-title{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600}
+.page-sub{font-size:0.78rem;color:var(--muted);margin-top:3px}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac,var(--gold))}
+.stat.g{--ac:var(--green)}.stat.r{--ac:var(--red)}.stat.a{--ac:var(--amber)}
+.stat-lbl{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+.stat-val{font-family:'Fraunces',serif;font-size:2rem;font-weight:600;margin:5px 0 3px;line-height:1}
+.stat-sub{font-size:0.7rem;color:var(--green)}
+.stat-sub.r{color:var(--red)}
+.stat-ico{position:absolute;top:14px;right:14px;font-size:1.3rem;opacity:0.35}
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-bottom:18px}
+.rcol{display:flex;flex-direction:column;gap:18px}
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:18px}
+.panel:last-child{margin-bottom:0}
+.panel-hdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:600}
+.panel-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+/* FILTER BAR */
+.fbar{padding:10px 22px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.fbtn{padding:4px 12px;border-radius:20px;font-size:0.7rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.fbtn:hover,.fbtn.active{background:var(--gold-dim);border-color:rgba(200,151,58,0.4);color:var(--gold)}
+/* TABLE */
+.t-hdr{padding:9px 22px;display:grid;grid-template-columns:36px 1fr 80px 110px 75px;gap:10px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.th{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+.crow{padding:13px 22px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:36px 1fr 80px 110px 75px;gap:10px;align-items:center;cursor:pointer;transition:background 0.2s}
+.crow:hover{background:var(--gold-dim)}
+.crow:last-child{border-bottom:none}
+.cnum{font-family:'Fraunces',serif;font-size:0.78rem;color:var(--muted)}
+.cname{font-size:0.83rem;font-weight:500}
+.cprev{font-size:0.7rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.lbadge{font-size:0.62rem;padding:3px 7px;border-radius:4px;background:var(--gold-dim);color:var(--gold);border:1px solid rgba(200,151,58,0.2);font-weight:500;text-align:center}
+.sbadge{font-size:0.62rem;padding:3px 9px;border-radius:20px;font-weight:500;text-align:center}
+.sbadge.resolved{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.sbadge.pending{background:rgba(232,160,32,0.1);color:var(--amber);border:1px solid rgba(232,160,32,0.2)}
+.sbadge.critical{background:rgba(255,107,107,0.1);color:var(--red);border:1px solid rgba(255,107,107,0.2)}
+.ctime{font-size:0.68rem;color:var(--muted)}
+/* LANG/CAT */
+.llist,.clist{padding:14px 22px}
+.li{margin-bottom:12px}.li:last-child{margin-bottom:0}
+.lirow{display:flex;justify-content:space-between;margin-bottom:5px}
+.liname{font-size:0.78rem}
+.lipct{font-size:0.78rem;color:var(--gold);font-weight:500}
+.lbar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.lfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;transition:width 0.8s}
+.ci{display:flex;align-items:center;gap:10px;margin-bottom:11px}.ci:last-child{margin-bottom:0}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cname2{font-size:0.78rem;flex:1}
+.ccount{font-size:0.78rem;color:var(--muted)}
+.cbw{flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.cb{height:100%;border-radius:2px;transition:width 0.8s}
+/* INSIGHTS */
+.ilist{padding:14px 22px;display:flex;flex-direction:column;gap:10px}
+.icard{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;display:flex;gap:10px}
+.iico{font-size:1rem;flex-shrink:0;margin-top:1px}
+.itxt{font-size:0.76rem;color:var(--muted);line-height:1.5}
+.itxt strong{color:var(--text)}
+/* CONFIG/STAFF */
+.cbody{padding:22px;display:flex;flex-direction:column;gap:0}
+.crow2{padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.crow2:last-child{border-bottom:none}
+.clbl{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+.cval{font-size:0.86rem;text-align:right}
+.cval.ok{color:var(--green)}.cval.soon{color:var(--amber)}
+.sitem{display:flex;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--border)}
+.sitem:last-child{border-bottom:none}
+.sav{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),#8B3A1C);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;color:white;flex-shrink:0}
+.sname{font-size:0.86rem;font-weight:500}
+.semail{font-size:0.7rem;color:var(--muted)}
+/* EMPTY */
+.empty{padding:2.5rem;text-align:center;color:var(--muted)}
+.empty .ei{font-size:2.2rem;margin-bottom:0.8rem;opacity:0.4;display:block}
+.empty p{font-size:0.82rem;line-height:1.6}
+/* MODAL */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.moverlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;width:560px;max-width:95vw;max-height:85vh;overflow-y:auto;animation:mIn 0.25s ease}
+@keyframes mIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:none}}
+.mhdr{padding:22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.mtitle{font-family:'Fraunces',serif;font-size:1.05rem}
+.mref{font-size:0.68rem;color:var(--gold);margin-top:3px}
+.mclose{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1;padding:2px 6px;border-radius:6px;transition:all 0.2s}
+.mclose:hover{background:var(--surface2);color:var(--text)}
+.mbody{padding:22px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.dlbl{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px}
+.dval{font-size:0.88rem}
+.tbox{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px;font-size:0.8rem;color:var(--muted);line-height:1.7;margin-top:5px}
+.tbox.en{border-color:rgba(200,151,58,0.4);color:var(--text)}
+.abox{background:rgba(45,122,74,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:13px;font-size:0.8rem;color:#A8E6C0;line-height:1.6;margin-top:5px}
+.abox.staff{background:rgba(45,74,122,0.1);border-color:rgba(74,144,222,0.2);color:#A8C8E6}
+.mfooter{padding:0 22px 22px;display:flex;gap:10px}
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--surface);border:1px solid rgba(74,222,128,0.4);border-radius:14px;padding:1rem 1.4rem;font-size:0.83rem;max-width:300px;transform:translateY(120px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);z-index:999;display:flex;gap:0.8rem;align-items:flex-start}
+.toast.show{transform:translateY(0);opacity:1}
+.t-title{font-weight:600;color:var(--green);font-size:0.8rem;margin-bottom:2px}
+.t-body{font-size:0.75rem;color:var(--muted)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
 
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-sym">Akoma</div>
+    <div class="logo-sub">System · Dashboard</div>
+  </div>
+  <nav id="sideNav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" data-page="overview"><span class="nav-icon">📊</span> Overview</div>
+    <div class="nav-item" data-page="all"><span class="nav-icon">📋</span> All Complaints</div>
+    <div class="nav-item" data-page="critical"><span class="nav-icon">🔴</span> Critical Alerts</div>
+    <div class="nav-item" data-page="resolved"><span class="nav-icon">✅</span> Resolved</div>
+    <div class="nav-section">Reports</div>
+    <div class="nav-item" data-page="daily"><span class="nav-icon">📅</span> Daily Report</div>
+    <div class="nav-item" data-page="analytics"><span class="nav-icon">📈</span> Analytics</div>
+    <div class="nav-item" data-page="insights"><span class="nav-icon">🤖</span> AI Insights</div>
+    <div class="nav-section">Settings</div>
+    <div class="nav-item" data-page="config"><span class="nav-icon">⚙️</span> Configuration</div>
+    <div class="nav-item" data-page="staff"><span class="nav-icon">👥</span> Staff Access</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="co-badge">
+      <div class="co-av">EC</div>
+      <div><div class="co-name">ECG Ghana</div><div class="co-plan">Business Plan</div></div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1 id="topTitle">Complaint Dashboard</h1>
+      <p id="topDate"></p>
+    </div>
+    <div class="topbar-right">
+      <div class="badge fb" id="fbBadge"><div class="dot blink" id="fbDot"></div><span id="fbTxt">Connecting...</span></div>
+      <div class="badge live"><div class="dot"></div>AI Active</div>
+      <button class="btn btn-gold" onclick="exportCSV()">📄 Export CSV</button>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="page show" id="page-overview">
+    <div class="content">
+      <div class="stats">
+        <div class="stat"><div class="stat-ico">📞</div><div class="stat-lbl">Total Complaints</div><div class="stat-val" id="s-total">0</div><div class="stat-sub" id="s-total-sub">Loading...</div></div>
+        <div class="stat g"><div class="stat-ico">✅</div><div class="stat-lbl">Resolved</div><div class="stat-val" id="s-res">0</div><div class="stat-sub" id="s-res-sub">—</div></div>
+        <div class="stat a"><div class="stat-ico">⏳</div><div class="stat-lbl">Pending</div><div class="stat-val" id="s-pen">0</div><div class="stat-sub">Awaiting resolution</div></div>
+        <div class="stat r"><div class="stat-ico">🚨</div><div class="stat-lbl">High Priority</div><div class="stat-val" id="s-crit">0</div><div class="stat-sub r" id="s-crit-sub">—</div></div>
+      </div>
+      <div class="g2">
+        <div class="panel">
+          <div class="panel-hdr"><div><div class="panel-title">Live Complaints Feed</div><div class="panel-sub">Updates in real time from Firebase</div></div></div>
+          <div class="fbar">
+            <button class="fbtn active" data-filter="all" data-target="ov-list">All (<span id="c-all">0</span>)</button>
+            <button class="fbtn" data-filter="pending" data-target="ov-list">Pending (<span id="c-pen">0</span>)</button>
+            <button class="fbtn" data-filter="critical" data-target="ov-list">Critical (<span id="c-crit">0</span>)</button>
+            <button class="fbtn" data-filter="resolved" data-target="ov-list">Resolved (<span id="c-res">0</span>)</button>
+          </div>
+          <div class="t-hdr"><div class="th">#</div><div class="th">Caller & Complaint</div><div class="th">Language</div><div class="th">Status</div><div class="th">Time</div></div>
+          <div id="ov-list"><div class="empty"><span class="ei">📡</span><p>Connecting to Firebase...<br>Complaints appear here in real time.</p></div></div>
+        </div>
+        <div class="rcol">
+          <div class="panel"><div class="panel-hdr"><div><div class="panel-title">Languages Used</div><div class="panel-sub">Breakdown by language</div></div></div><div class="llist" id="ov-langs"></div></div>
+          <div class="panel"><div class="panel-hdr"><div><div class="panel-title">Categories</div><div class="panel-sub">Most common issues</div></div></div><div class="clist" id="ov-cats"></div></div>
+          <div class="panel"><div class="panel-hdr"><div><div class="panel-title">🤖 AI Insights</div><div class="panel-sub">Auto-generated from live data</div></div></div><div class="ilist" id="ov-insights"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL COMPLAINTS -->
+  <div class="page" id="page-all">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">📋 All Complaints</div><div class="page-sub">Every complaint submitted to AkomaSystem</div></div>
+      <div class="panel">
+        <div class="fbar">
+          <button class="fbtn active" data-filter="all" data-target="all-list">All</button>
+          <button class="fbtn" data-filter="pending" data-target="all-list">Pending</button>
+          <button class="fbtn" data-filter="critical" data-target="all-list">High Priority</button>
+          <button class="fbtn" data-filter="resolved" data-target="all-list">Resolved</button>
+        </div>
+        <div class="t-hdr"><div class="th">#</div><div class="th">Caller & Complaint</div><div class="th">Language</div><div class="th">Status</div><div class="th">Time</div></div>
+        <div id="all-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRITICAL -->
+  <div class="page" id="page-critical">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">🔴 Critical Alerts</div><div class="page-sub">High priority complaints needing immediate attention</div></div>
+      <div class="panel">
+        <div class="t-hdr"><div class="th">#</div><div class="th">Caller & Complaint</div><div class="th">Language</div><div class="th">Status</div><div class="th">Time</div></div>
+        <div id="crit-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESOLVED -->
+  <div class="page" id="page-resolved">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">✅ Resolved Complaints</div><div class="page-sub">All successfully resolved complaints</div></div>
+      <div class="panel">
+        <div class="t-hdr"><div class="th">#</div><div class="th">Caller & Complaint</div><div class="th">Language</div><div class="th">Status</div><div class="th">Time</div></div>
+        <div id="res-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY REPORT -->
+  <div class="page" id="page-daily">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">📅 Daily Report</div><div class="page-sub" id="daily-date"></div></div>
+      <div class="stats" style="margin-bottom:20px">
+        <div class="stat"><div class="stat-ico">📞</div><div class="stat-lbl">Total</div><div class="stat-val" id="dr-t">0</div></div>
+        <div class="stat g"><div class="stat-ico">✅</div><div class="stat-lbl">Resolved</div><div class="stat-val" id="dr-r">0</div></div>
+        <div class="stat a"><div class="stat-ico">⏳</div><div class="stat-lbl">Pending</div><div class="stat-val" id="dr-p">0</div></div>
+        <div class="stat r"><div class="stat-ico">🚨</div><div class="stat-lbl">Critical</div><div class="stat-val" id="dr-c">0</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="panel">
+            <div class="panel-hdr"><div class="panel-title">Today's Complaints</div></div>
+            <div class="t-hdr"><div class="th">#</div><div class="th">Caller & Complaint</div><div class="th">Language</div><div class="th">Status</div><div class="th">Time</div></div>
+            <div id="daily-list"></div>
+          </div>
+          <div style="margin-top:14px;text-align:right"><button class="btn btn-gold" onclick="exportCSV()">📄 Download CSV</button></div>
+        </div>
+        <div class="rcol">
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">Languages Today</div></div><div class="llist" id="daily-langs"></div></div>
+          <div class="panel"><div class="panel-hdr"><div class="panel-title">Categories Today</div></div><div class="clist" id="daily-cats"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="page" id="page-analytics">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">📈 Analytics</div><div class="page-sub">Full performance overview</div></div>
+      <div class="stats" style="margin-bottom:20px">
+        <div class="stat"><div class="stat-ico">📊</div><div class="stat-lbl">Total</div><div class="stat-val" id="an-t">0</div></div>
+        <div class="stat g"><div class="stat-ico">🎯</div><div class="stat-lbl">Resolution Rate</div><div class="stat-val" id="an-r">0%</div></div>
+        <div class="stat a"><div class="stat-ico">🌍</div><div class="stat-lbl">Languages</div><div class="stat-val" id="an-l">0</div></div>
+        <div class="stat r"><div class="stat-ico">📂</div><div class="stat-lbl">Categories</div><div class="stat-val" id="an-c">0</div></div>
+      </div>
+      <div class="g2">
+        <div class="panel"><div class="panel-hdr"><div class="panel-title">Language Breakdown</div></div><div class="llist" id="an-langs"></div></div>
+        <div class="panel"><div class="panel-hdr"><div class="panel-title">Category Breakdown</div></div><div class="clist" id="an-cats"></div></div>
+      </div>
+      <div class="panel"><div class="panel-hdr"><div class="panel-title">Customer Sentiment</div><div class="panel-sub">How customers felt when submitting</div></div><div class="clist" id="an-sent"></div></div>
+    </div>
+  </div>
+
+  <!-- AI INSIGHTS -->
+  <div class="page" id="page-insights">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">🤖 AI Insights</div><div class="page-sub">Gemini AI analysis of all complaints</div></div>
+      <div class="panel"><div class="panel-hdr"><div class="panel-title">Full Recommendations</div></div><div class="ilist" id="full-insights"></div></div>
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-hdr"><div class="panel-title">AI-Resolved Complaints</div><div class="panel-sub">Complaints resolved on the spot</div></div>
+        <div class="t-hdr"><div class="th">#</div><div class="th">Caller & Complaint</div><div class="th">Language</div><div class="th">Status</div><div class="th">Time</div></div>
+        <div id="ai-res-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIGURATION -->
+  <div class="page" id="page-config">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">⚙️ Configuration</div><div class="page-sub">AkomaSystem technical settings</div></div>
+      <div class="panel" style="max-width:600px">
+        <div class="panel-hdr"><div class="panel-title">System Information</div></div>
+        <div class="cbody">
+          <div class="crow2"><span class="clbl">System Name</span><span class="cval">AkomaSystem</span></div>
+          <div class="crow2"><span class="clbl">AI Engine</span><span class="cval ok">Google Gemini 1.5 Flash ✅</span></div>
+          <div class="crow2"><span class="clbl">Database</span><span class="cval ok">Firebase Firestore ✅</span></div>
+          <div class="crow2"><span class="clbl">Hosting</span><span class="cval ok">GitHub Pages ✅</span></div>
+          <div class="crow2"><span class="clbl">Voice Calling</span><span class="cval soon">Twilio — Coming Soon ⏳</span></div>
+          <div class="crow2"><span class="clbl">SMS Notifications</span><span class="cval soon">Coming Soon ⏳</span></div>
+          <div class="crow2"><span class="clbl">Languages</span><span class="cval">Twi · Ga · Ewe · Dagbani · Hausa · English</span></div>
+          <div class="crow2"><span class="clbl">Firebase Project</span><span class="cval">akomasystem</span></div>
+          <div class="crow2"><span class="clbl">Developer</span><span class="cval">Eric Dabankah</span></div>
+          <div class="crow2"><span class="clbl">Contact</span><span class="cval">ericdabankah23@gmail.com</span></div>
+          <div class="crow2"><span class="clbl">Version</span><span class="cval">v1.0.0 Beta 🇬🇭</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAFF ACCESS -->
+  <div class="page" id="page-staff">
+    <div class="content">
+      <div class="page-hdr"><div class="page-title">👥 Staff Access</div><div class="page-sub">Manage who can view the dashboard</div></div>
+      <div class="panel" style="max-width:520px">
+        <div class="panel-hdr"><div class="panel-title">Current Staff</div></div>
+        <div class="sitem">
+          <div class="sav">ED</div>
+          <div><div class="sname">Eric Dabankah</div><div class="semail">ericdabankah23@gmail.com · 0599341577</div></div>
+          <div style="margin-left:auto"><span class="sbadge resolved">Admin</span></div>
+        </div>
+        <div style="margin:16px 22px;padding:14px;background:var(--surface2);border:1px dashed var(--border);border-radius:10px;text-align:center;color:var(--muted);font-size:0.8rem;line-height:1.6">
+          👥 Add more staff when AkomaSystem goes live.<br>Full login system coming in next version.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="moverlay" id="modal">
+  <div class="modal">
+    <div class="mhdr">
+      <div><div class="mtitle" id="m-title">Complaint Details</div><div class="mref" id="m-ref">—</div></div>
+      <button class="mclose" id="mclose">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="dgrid">
+        <div><div class="dlbl">Caller Name</div><div class="dval" id="m-name">—</div></div>
+        <div><div class="dlbl">Phone</div><div class="dval" id="m-phone">—</div></div>
+        <div><div class="dlbl">Language</div><div class="dval" id="m-lang">—</div></div>
+        <div><div class="dlbl">Region</div><div class="dval" id="m-region">—</div></div>
+        <div><div class="dlbl">Company</div><div class="dval" id="m-company">—</div></div>
+        <div><div class="dlbl">Priority</div><div class="dval" id="m-priority">—</div></div>
+      </div>
+      <div style="margin-bottom:13px"><div class="dlbl">Category</div><div class="dval" id="m-cat">—</div></div>
+      <div style="margin-bottom:13px"><div class="dlbl">🇬🇭 Original Complaint (Local Language)</div><div class="tbox" id="m-text">—</div></div>
+      <div style="margin-bottom:13px"><div class="dlbl">🇬🇧 English Translation</div><div class="tbox en" id="m-trans">—</div></div>
+      <div style="margin-bottom:13px"><div class="dlbl">🤖 AI Summary (English)</div><div class="tbox" id="m-summary">—</div></div>
+      <div style="margin-bottom:13px"><div class="dlbl">📋 Staff Action (English)</div><div class="abox staff" id="m-action">—</div></div>
+      <div><div class="dlbl">💬 Customer Response (Local Language)</div><div class="abox" id="m-response">—</div></div>
+    </div>
+    <div class="mfooter">
+      <button class="btn btn-out" id="m-close-btn">Close</button>
+      <button class="btn btn-gold" id="m-resolve-btn">✓ Mark Resolved</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div style="font-size:1.3rem">🔔</div>
+  <div><div class="t-title">New Complaint!</div><div class="t-body" id="toast-body"></div></div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBXXbkn3eX7Rz2-Hf1XEwXOL8AV5uq_8AY",
+  authDomain:"akomasystem.firebaseapp.com",
+  projectId:"akomasystem",
+  storageBucket:"akomasystem.firebasestorage.app",
+  messagingSenderId:"161125246511",
+  appId:"1:161125246511:web:f677ff4a02c4e900e408da"
+});
+const db = getFirestore(app);
+
+let firstLoad = true;
+let prevCount = 0;
+
+const q = query(collection(db,'complaints'), orderBy('createdAt','desc'), limit(200));
+
+onSnapshot(q, snap => {
+  document.getElementById('fbBadge').className = 'badge fb ok';
+  document.getElementById('fbDot').classList.remove('blink');
+  document.getElementById('fbTxt').textContent = 'Firebase Live';
+
+  const list = [];
+  snap.forEach(d => list.push({_id:d.id, ...d.data()}));
+
+  if (!firstLoad && list.length > prevCount) {
+    const n = list[0];
+    document.getElementById('toast-body').textContent = (n.callerName||'Anonymous') + ' · ' + cap(n.language||'English') + ' · ' + (n.category||'Complaint');
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 5000);
+  }
+  prevCount = list.length;
+  firstLoad = false;
+
+  window.__data = list;
+  window.__db = db;
+  window.__updateDoc = (id, data) => updateDoc(doc(db,'complaints',id), data);
+
+  // Refresh current active page
+  const activePage = document.querySelector('.page.show');
+  if (activePage) refreshPage(activePage.id.replace('page-',''));
+
+}, err => {
+  console.error('Firebase:', err);
+  document.getElementById('fbTxt').textContent = 'Check Firebase Rules';
+});
+</script>
+
+<!-- MAIN SCRIPT -->
+<script>
+var COLORS = ['#C8973A','#4ADE80','#FF6B6B','#60A5FA','#E8A020','#B39DDB','#F97316'];
+var FLAGS = {twi:'🇬🇭',ga:'🇬🇭',ewe:'🇬🇭',dagbani:'🇬🇭',hausa:'🇬🇭',english:'🇬🇧'};
+var PAGE_TITLES = {overview:'Complaint Dashboard','all':'All Complaints',critical:'Critical Alerts',resolved:'Resolved Complaints',daily:'Daily Report',analytics:'Analytics',insights:'AI Insights',config:'Configuration',staff:'Staff Access'};
+
+function cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
+
+function timeAgo(iso) {
+  if (!iso) return 'just now';
+  var m = Math.floor((Date.now() - new Date(iso)) / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  var h = Math.floor(m/60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h/24) + 'd ago';
+}
+
+function getStatus(c) {
+  if (c.status === 'resolved' || c.status === 'Resolved') return 'resolved';
+  if (c.priority === 'High') return 'critical';
+  return 'pending';
+}
+
+function applyFilter(data, f) {
+  if (f === 'all') return data;
+  if (f === 'pending') return data.filter(function(c){ return getStatus(c) === 'pending'; });
+  if (f === 'critical') return data.filter(function(c){ return getStatus(c) === 'critical'; });
+  if (f === 'resolved') return data.filter(function(c){ return getStatus(c) === 'resolved'; });
+  return data;
+}
+
+function renderList(id, items, allData) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div class="empty"><span class="ei">📭</span><p>No complaints here yet.<br>They appear automatically.</p></div>';
+    return;
+  }
+  var all = allData || window.__data || items;
+  el.innerHTML = items.map(function(c, i) {
+    var idx = all.indexOf(c);
+    var sc = getStatus(c);
+    var sl = sc === 'resolved' ? 'Resolved' : sc === 'critical' ? 'High Priority' : 'Pending';
+    var preview = c.summary || c.englishTranslation || c.complaintText || '—';
+    return '<div class="crow" onclick="openModal(' + idx + ')">'
+      + '<div class="cnum">' + (i+1) + '</div>'
+      + '<div><div class="cname">' + (c.callerName||'Anonymous') + ' · ' + (c.callerPhone||'') + '</div>'
+      + '<div class="cprev">' + preview + '</div></div>'
+      + '<div class="lbadge">' + cap(c.language||'En') + '</div>'
+      + '<div class="sbadge ' + sc + '">' + sl + '</div>'
+      + '<div class="ctime">' + timeAgo(c.createdAt) + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function renderLangs(id, data) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var counts = {};
+  data.forEach(function(c){ var l = cap(c.language||'English'); counts[l]=(counts[l]||0)+1; });
+  var total = data.length || 1;
+  var sorted = Object.entries(counts).sort(function(a,b){ return b[1]-a[1]; });
+  if (!sorted.length) { el.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:0.78rem;text-align:center">No data yet</div>'; return; }
+  el.innerHTML = sorted.map(function(e,i) {
+    var pct = Math.round((e[1]/total)*100);
+    var flag = FLAGS[e[0].toLowerCase()] || '🌍';
+    return '<div class="li"><div class="lirow"><span class="liname">' + flag + ' ' + e[0] + '</span><span class="lipct" style="color:' + COLORS[i%COLORS.length] + '">' + pct + '% (' + e[1] + ')</span></div>'
+      + '<div class="lbar"><div class="lfill" style="width:' + pct + '%;background:' + COLORS[i%COLORS.length] + '"></div></div></div>';
+  }).join('');
+}
+
+function renderCats(id, data) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var counts = {};
+  data.forEach(function(c){ var cat = c.category||'Other'; counts[cat]=(counts[cat]||0)+1; });
+  var sorted = Object.entries(counts).sort(function(a,b){ return b[1]-a[1]; }).slice(0,7);
+  var maxv = Math.max.apply(null, sorted.map(function(x){ return x[1]; }).concat([1]));
+  if (!sorted.length) { el.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:0.78rem;text-align:center">No data yet</div>'; return; }
+  el.innerHTML = sorted.map(function(e,i) {
+    return '<div class="ci"><div class="cdot" style="background:' + COLORS[i%COLORS.length] + '"></div>'
+      + '<div class="cname2">' + e[0] + '</div>'
+      + '<div class="cbw"><div class="cb" style="width:' + Math.round((e[1]/maxv)*100) + '%;background:' + COLORS[i%COLORS.length] + '"></div></div>'
+      + '<div class="ccount">' + e[1] + '</div></div>';
+  }).join('');
+}
+
+function renderInsights(id, data) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (!data || data.length === 0) {
+    el.innerHTML = '<div class="icard"><div class="iico">⏳</div><div class="itxt">Submit complaints to generate AI insights automatically.</div></div>';
+    return;
+  }
+  var total = data.length;
+  var res = data.filter(function(c){ return getStatus(c)==='resolved'; }).length;
+  var pct = Math.round((res/total)*100);
+  var high = data.filter(function(c){ return c.priority==='High'; }).length;
+  var langs = {};
+  data.forEach(function(c){ var l = c.language||'english'; langs[l]=(langs[l]||0)+1; });
+  var topLang = Object.entries(langs).sort(function(a,b){ return b[1]-a[1]; })[0];
+  var cats = {};
+  data.forEach(function(c){ var cat = c.category||'Other'; cats[cat]=(cats[cat]||0)+1; });
+  var topCat = Object.entries(cats).sort(function(a,b){ return b[1]-a[1]; })[0];
+  var angry = data.filter(function(c){ return c.sentiment==='Angry'||c.sentiment==='Frustrated'; }).length;
+
+  el.innerHTML = '<div class="icard"><div class="iico">📊</div><div class="itxt"><strong>Resolution Rate: ' + pct + '%</strong> — ' + res + '/' + total + ' resolved. ' + (pct>=70?'Excellent! Above 70% target 🎉':'Below 70% — prioritise pending complaints.') + '</div></div>'
+    + '<div class="icard"><div class="iico">🗣️</div><div class="itxt"><strong>Top Language: ' + cap(topLang?topLang[0]:'English') + '</strong> — ' + (topLang?topLang[1]:0) + ' complaints. Ensure AI responses in this language are accurate.</div></div>'
+    + '<div class="icard"><div class="iico">📋</div><div class="itxt"><strong>Top Category: ' + (topCat?topCat[0]:'N/A') + '</strong> — ' + (topCat?topCat[1]:0) + ' complaints. Consider an automated instant response for this.</div></div>'
+    + (high > 0 ? '<div class="icard"><div class="iico">🚨</div><div class="itxt"><strong>' + high + ' High Priority complaint' + (high>1?'s':'') + '</strong> — Need immediate staff attention.</div></div>' : '')
+    + (angry > 0 ? '<div class="icard"><div class="iico">😤</div><div class="itxt"><strong>' + angry + ' angry customer' + (angry>1?'s':'') + '</strong> — Follow up personally to rebuild trust.</div></div>' : '');
+}
+
+// ── SIDEBAR NAVIGATION ──
+document.getElementById('sideNav').addEventListener('click', function(e) {
+  var item = e.target.closest('.nav-item');
+  if (!item) return;
+  var page = item.getAttribute('data-page');
+  if (!page) return;
+
+  // Update active nav
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  item.classList.add('active');
+
+  // Show correct page
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('show'); });
+  var target = document.getElementById('page-' + page);
+  if (target) target.classList.add('show');
+
+  // Update title
+  document.getElementById('topTitle').textContent = PAGE_TITLES[page] || 'Dashboard';
+
+  // Load page data
+  refreshPage(page);
+});
+
+// ── FILTER BUTTONS ──
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.fbtn');
+  if (!btn) return;
+  var filter = btn.getAttribute('data-filter');
+  var targetId = btn.getAttribute('data-target');
+  if (!filter || !targetId) return;
+
+  btn.closest('.fbar').querySelectorAll('.fbtn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+
+  var data = window.__data || [];
+  renderList(targetId, applyFilter(data, filter), data);
+});
+
+// ── REFRESH PAGE ──
+window.refreshPage = function refreshPage(page) {
+  var data = window.__data || [];
+
+  if (page === 'overview') {
+    var total = data.length;
+    var res = data.filter(function(c){ return getStatus(c)==='resolved'; }).length;
+    var pen = data.filter(function(c){ return getStatus(c)==='pending'; }).length;
+    var crit = data.filter(function(c){ return getStatus(c)==='critical'; }).length;
+    var pct = total > 0 ? Math.round((res/total)*100) : 0;
+    document.getElementById('s-total').textContent = total;
+    document.getElementById('s-res').textContent = res;
+    document.getElementById('s-pen').textContent = pen;
+    document.getElementById('s-crit').textContent = crit;
+    document.getElementById('s-total-sub').textContent = total + ' total received';
+    document.getElementById('s-res-sub').textContent = pct + '% resolution rate';
+    document.getElementById('s-crit-sub').textContent = crit > 0 ? crit + ' need urgent attention' : 'None critical ✓';
+    document.getElementById('c-all').textContent = total;
+    document.getElementById('c-pen').textContent = pen;
+    document.getElementById('c-crit').textContent = crit;
+    document.getElementById('c-res').textContent = res;
+    // Get current filter
+    var activeFilter = 'all';
+    var activeBtn = document.querySelector('#page-overview .fbtn.active');
+    if (activeBtn) activeFilter = activeBtn.getAttribute('data-filter') || 'all';
+    renderList('ov-list', applyFilter(data, activeFilter), data);
+    renderLangs('ov-langs', data);
+    renderCats('ov-cats', data);
+    renderInsights('ov-insights', data);
+  }
+  else if (page === 'all') {
+    var activeBtn2 = document.querySelector('#page-all .fbtn.active');
+    var f2 = activeBtn2 ? (activeBtn2.getAttribute('data-filter')||'all') : 'all';
+    renderList('all-list', applyFilter(data, f2), data);
+  }
+  else if (page === 'critical') renderList('crit-list', applyFilter(data,'critical'), data);
+  else if (page === 'resolved') renderList('res-list', applyFilter(data,'resolved'), data);
+  else if (page === 'daily') {
+    var today = new Date().toDateString();
+    var todayData = data.filter(function(c){ return c.createdAt && new Date(c.createdAt).toDateString()===today; });
+    var d = todayData.length > 0 ? todayData : data;
+    document.getElementById('daily-date').textContent = new Date().toLocaleDateString('en-GH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('dr-t').textContent = d.length;
+    document.getElementById('dr-r').textContent = d.filter(function(c){ return getStatus(c)==='resolved'; }).length;
+    document.getElementById('dr-p').textContent = d.filter(function(c){ return getStatus(c)==='pending'; }).length;
+    document.getElementById('dr-c').textContent = d.filter(function(c){ return getStatus(c)==='critical'; }).length;
+    renderList('daily-list', d, data);
+    renderLangs('daily-langs', d);
+    renderCats('daily-cats', d);
+  }
+  else if (page === 'analytics') {
+    var total2 = data.length;
+    var res2 = data.filter(function(c){ return getStatus(c)==='resolved'; }).length;
+    document.getElementById('an-t').textContent = total2;
+    document.getElementById('an-r').textContent = total2>0 ? Math.round((res2/total2)*100)+'%' : '0%';
+    document.getElementById('an-l').textContent = new Set(data.map(function(c){ return c.language; })).size;
+    document.getElementById('an-c').textContent = new Set(data.map(function(c){ return c.category; })).size;
+    renderLangs('an-langs', data);
+    renderCats('an-cats', data);
+    var sc = {};
+    data.forEach(function(c){ var s=c.sentiment||'Neutral'; sc[s]=(sc[s]||0)+1; });
+    var maxs = Math.max.apply(null, Object.values(sc).concat([1]));
+    var scColors = {Angry:'#FF6B6B',Frustrated:'#E8A020',Neutral:'#60A5FA',Satisfied:'#4ADE80'};
+    var sentEl = document.getElementById('an-sent');
+    if (sentEl) sentEl.innerHTML = Object.entries(sc).sort(function(a,b){ return b[1]-a[1]; }).map(function(e,i) {
+      return '<div class="ci"><div class="cdot" style="background:'+(scColors[e[0]]||COLORS[i%COLORS.length])+'"></div>'
+        +'<div class="cname2">'+e[0]+'</div>'
+        +'<div class="cbw"><div class="cb" style="width:'+Math.round((e[1]/maxs)*100)+'%;background:'+(scColors[e[0]]||COLORS[i%COLORS.length])+'"></div></div>'
+        +'<div class="ccount">'+e[1]+'</div></div>';
+    }).join('') || '<div style="padding:12px;color:var(--muted);font-size:0.78rem;text-align:center">No sentiment data yet</div>';
+  }
+  else if (page === 'insights') {
+    renderInsights('full-insights', data);
+    var aiRes = data.filter(function(c){ return c.resolvedOnSpot===true; });
+    renderList('ai-res-list', aiRes.length>0 ? aiRes : applyFilter(data,'resolved'), data);
+  }
+}
+
+// ── MODAL ──
+window.openModal = function openModal(idx) {
+  var data = window.__data || [];
+  var c = data[idx];
+  if (!c) { console.error('No complaint at index', idx); return; }
+  window.__selectedId = c._id;
+
+  document.getElementById('m-title').textContent = c.category || 'Complaint';
+  document.getElementById('m-ref').textContent = 'REF #' + (c.ticketId || c._id || '—');
+  document.getElementById('m-name').textContent = c.callerName || 'Anonymous';
+  document.getElementById('m-phone').textContent = c.callerPhone || 'Not provided';
+  document.getElementById('m-lang').textContent = cap(c.language || 'English');
+  document.getElementById('m-region').textContent = c.region || 'Not specified';
+  document.getElementById('m-company').textContent = c.company || 'Not specified';
+  document.getElementById('m-priority').textContent = c.priority || 'Medium';
+  document.getElementById('m-cat').textContent = c.category || '—';
+  document.getElementById('m-text').textContent = c.complaintText || '—';
+  document.getElementById('m-trans').textContent = c.englishTranslation || (c.language==='english' ? c.complaintText : 'No translation — resubmit to get English translation') || '—';
+  document.getElementById('m-summary').textContent = c.summary || '—';
+  document.getElementById('m-action').textContent = c.staffAction || c.suggestedResponse || 'Review complaint manually';
+  document.getElementById('m-response').textContent = c.customerResponse || c.suggestedResponse || '—';
+  document.getElementById('modal').classList.add('open');
+}
+
+window.closeModal = function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+document.getElementById('mclose').onclick = closeModal;
+document.getElementById('m-close-btn').onclick = closeModal;
+document.getElementById('modal').onclick = function(e){ if(e.target===this) closeModal(); };
+
+document.getElementById('m-resolve-btn').onclick = async function() {
+  var id = window.__selectedId;
+  if (!id) { alert('No complaint selected.'); return; }
+  if (!window.__updateDoc) { alert('Firebase not connected yet.'); return; }
+  try {
+    await window.__updateDoc(id, {status:'resolved'});
+    closeModal();
+  } catch(e) {
+    alert('Update failed. Check Firebase rules: allow read, write: if true;');
+    console.error(e);
+  }
+};
+
+// ── EXPORT CSV ──
+window.exportCSV = function exportCSV() {
+  var data = window.__data || [];
+  if (!data.length) { alert('No complaints to export yet.'); return; }
+  var rows = [['Ticket ID','Name','Phone','Language','Region','Company','Category','Priority','Status','English Summary','Date']];
+  data.forEach(function(c) {
+    rows.push([c.ticketId||'', c.callerName||'', c.callerPhone||'', c.language||'', c.region||'', c.company||'', c.category||'', c.priority||'', c.status||'', (c.summary||'').replace(/,/g,' '), c.createdAt||'']);
+  });
+  var csv = rows.map(function(r){ return r.join(','); }).join('\n');
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'AkomaSystem-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+// ── INIT ──
+document.getElementById('topDate').textContent = new Date().toLocaleDateString('en-GH',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' · Real-time updates';
+window.__data = [];
+</script>
+
+</body>
+</html>
 /* TOPBAR */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-left h1{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:600}
