@@ -388,7 +388,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <div class="config-row"><span class="config-label">Supported Languages</span><span class="config-value">Twi · Ga · Ewe · Dagbani · Hausa · English</span></div>
           <div class="config-row"><span class="config-label">Firebase Project ID</span><span class="config-value">akomasystem</span></div>
           <div class="config-row"><span class="config-label">Developer</span><span class="config-value">Eric Dabankah</span></div>
-          <div class="config-row"><span class="config-label">Contact</span><span class="config-value">ericdabankah23@gmail.com</span></div>
+          <div class="config-row"><span class="config-label">Contact</span><span class="config-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="94f1e6fdf7f0f5f6f5fafff5fca6a7d4f3f9f5fdf8baf7fbf9">[email&#160;protected]</a></span></div>
           <div class="config-row"><span class="config-label">Version</span><span class="config-value">v1.0.0 Beta</span></div>
         </div>
       </div>
@@ -405,7 +405,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <div class="staff-avatar">ED</div>
           <div>
             <div class="staff-name">Eric Dabankah</div>
-            <div class="staff-email">ericdabankah23@gmail.com · 0599341577</div>
+            <div class="staff-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5e4952585f5a595a55505a5309087b5c565a525715585456">[email&#160;protected]</a> · 0599341577</div>
           </div>
           <div class="staff-role"><span class="status-badge resolved">Admin</span></div>
         </div>
@@ -439,9 +439,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="detail-row"><div class="detail-label">Priority</div><div class="detail-value" id="mPriority">—</div></div>
       </div>
       <div class="detail-row" style="margin-bottom:14px"><div class="detail-label">Category</div><div class="detail-value" id="mCategory">—</div></div>
-      <div class="detail-row" style="margin-bottom:14px"><div class="detail-label">Complaint Text</div><div class="transcript-box" id="mText">—</div></div>
-      <div class="detail-row" style="margin-bottom:14px"><div class="detail-label">AI Summary</div><div class="transcript-box" id="mSummary">—</div></div>
-      <div class="detail-row"><div class="detail-label">AI Suggested Response</div><div class="ai-response-box" id="mResponse">—</div></div>
+      <div class="detail-row" style="margin-bottom:14px">
+        <div class="detail-label">🇬🇭 Original Complaint (Local Language)</div>
+        <div class="transcript-box" id="mText">—</div>
+      </div>
+      <div class="detail-row" style="margin-bottom:14px">
+        <div class="detail-label">🇬🇧 English Translation</div>
+        <div class="transcript-box" style="border-color:rgba(200,151,58,0.4);color:var(--text)" id="mTranslation">—</div>
+      </div>
+      <div class="detail-row" style="margin-bottom:14px">
+        <div class="detail-label">🤖 AI Summary (English)</div>
+        <div class="transcript-box" id="mSummary">—</div>
+      </div>
+      <div class="detail-row" style="margin-bottom:14px">
+        <div class="detail-label">📋 Staff Action (English)</div>
+        <div class="ai-response-box" id="mResponse">—</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">💬 Customer Response (Local Language)</div>
+        <div class="ai-response-box" style="color:#E8B96A" id="mCustomerResponse">—</div>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal()">Close</button>
@@ -457,7 +474,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <!-- ═══ FIREBASE MODULE SCRIPT ═══ -->
-<script type="module">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -553,7 +570,7 @@ function renderList(containerId, items, allItems){
       <div class="complaint-num">${i+1}</div>
       <div class="complaint-info">
         <div class="complaint-caller">${c.callerName||'Anonymous'} · ${c.callerPhone||''}</div>
-        <div class="complaint-preview">${c.complaintText||c.summary||'—'}</div>
+        <div class="complaint-preview">${c.summary || c.englishTranslation || c.complaintText || '—'}</div>
       </div>
       <div class="lang-badge">${cap(c.language||'en')}</div>
       <div class="status-badge ${sc}">${sl}</div>
@@ -772,8 +789,10 @@ window.openModal = function(idx){
   document.getElementById('mPriority').textContent = c.priority||'Medium';
   document.getElementById('mCategory').textContent = c.category||'—';
   document.getElementById('mText').textContent = c.complaintText||'—';
+  document.getElementById('mTranslation').textContent = c.englishTranslation || (c.language === 'english' ? c.complaintText : '⚠️ Submit complaint again to get English translation') || '—';
   document.getElementById('mSummary').textContent = c.summary||'—';
-  document.getElementById('mResponse').textContent = c.suggestedResponse||'No AI response generated.';
+  document.getElementById('mResponse').textContent = c.suggestedResponse||'No staff action generated.';
+  document.getElementById('mCustomerResponse').textContent = c.customerResponse||'No customer response generated.';
   document.getElementById('modal').classList.add('open');
 };
 
@@ -802,15 +821,4 @@ window.exportCSV = function(){
   data.forEach(c=>rows.push([c.ticketId||'',c.callerName||'',c.callerPhone||'',c.language||'',c.region||'',c.company||'',c.category||'',c.priority||'',c.status||'',(c.summary||'').replace(/,/g,' '),c.createdAt||'']));
   const csv=rows.map(r=>r.join(',')).join('\n');
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='AkomaSystem-'+new Date().toISOString().slice(0,10)+'.csv';
-  a.click();
-};
-
-// ── INIT ──
-document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-GH',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · Real-time updates';
-window._data = [];
-</script>
-
-</body>
-</html>
+  a.href=URL.createObjectURL(new Blo
