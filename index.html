@@ -1,11 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=akoma-complaint-form.html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AkomaSystem</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif;background:#0E0C09;color:#F0E8D8;display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:20px}
+.logo{font-size:2.5rem;font-weight:700;color:#C8973A}
+p{color:#8A7E6A;font-size:0.9rem}
+.links{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+a{padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:all 0.2s}
+.btn-gold{background:#C8973A;color:#0E0C09}
+.btn-outline{border:1px solid rgba(200,151,58,0.4);color:#C8973A}
+.flag{height:4px;width:100%;background:linear-gradient(to right,#C0392B 33.3%,#F5A623 33.3%,#F5A623 66.6%,#1A6B3A 66.6%);position:fixed;top:0;left:0}
+</style>
 </head>
 <body>
-<p>Loading AkomaSystem... <a href="akoma-complaint-form.html">Click here</a></p>
+<div class="flag"></div>
+<div class="logo">🫀 AkomaSystem</div>
+<p>Ghana's First AI Voice Complaint System in Local Languages</p>
+<div class="links">
+  <a href="akoma-complaint-form.html" class="btn-gold">📝 Submit a Complaint</a>
+  <a href="akoma-dashboard.html" class="btn-outline">📊 Staff Dashboard</a>
+</div>
+<p style="margin-top:8px;font-size:0.75rem">Twi · Ga · Ewe · Dagbani · Hausa · English</p>
 </body>
 </html>
