@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AkomaSystem — Submit Your Complaint</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<style>
+  :root {
+    --gold: #F5A623;
+    --red: #C0392B;
+    --green: #1A6B3A;
+    --dark: #0D1117;
+    --surface: #161B22;
+    --surface2: #21262D;
+    --border: rgba(245,166,35,0.2);
+    --text: #E6EDF3;
+    --muted: #7D8590;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ghana flag stripe top */
+  .flag-stripe {
+    height: 5px;
+    background: linear-gradient(to right, var(--red) 33.3%, var(--gold) 33.3%, var(--gold) 66.6%, var(--green) 66.6%);
+  }
+
+  /* Background pattern */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(245,166,35,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(26,107,58,0.04) 0%, transparent 50%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+  }
+
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--gold), #e8940f);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 0 20px rgba(245,166,35,0.3);
+  }
+
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+  }
+
+  .header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+  }
+
+  .header h1 span { color: var(--gold); }
+
+  .header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Language selector */
+  .lang-section {
+    margin-bottom: 1.8rem;
+  }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .section-label::after {
+    content:'';
+    flex:1;
+    height:1px;
+    background: var(--border);
+  }
+
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+
+  .lang-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.65rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text);
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 0.85rem;
+  }
+
+  .lang-btn .flag { font-size: 1.2rem; display:block; margin-bottom:0.2rem; }
+
+  .lang-btn:hover {
+    border-color: var(--gold);
+    background: rgba(245,166,35,0.08);
+  }
+
+  .lang-btn.active {
+    border-color: var(--gold);
+    background: rgba(245,166,35,0.12);
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  /* Voice recorder */
+  .voice-section {
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .record-btn {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), #a93226);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    transition: all 0.3s;
+    box-shadow: 0 0 0 0 rgba(192,57,43,0.4);
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .record-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(192,57,43,0.15);
+  }
+
+  .record-btn.recording {
+    background: linear-gradient(135deg, #e74c3c, var(--red));
+    animation: pulse-ring 1.5s ease-out infinite;
+  }
+
+  .record-btn.recording::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(192,57,43,0.5);
+    animation: ripple 1.5s ease-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+    70% { box-shadow: 0 0 0 20px rgba(192,57,43,0); }
+    100% { box-shadow: 0 0 0 0 rgba(192,57,43,0); }
+  }
+
+  @keyframes ripple {
+    0% { transform: scale(1); opacity:1; }
+    100% { transform: scale(1.4); opacity:0; }
+  }
+
+  .record-status {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .record-status.active { color: var(--red); font-weight: 500; }
+
+  .audio-timer {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: none;
+  }
+
+  .audio-timer.show { display: block; }
+
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.5rem 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .divider::before, .divider::after {
+    content:''; flex:1; height:1px;
+    background: var(--border);
+  }
+
+  /* Form fields */
+  .field { margin-bottom: 1.2rem; }
+
+  .field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+    outline: none;
+    resize: vertical;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--gold);
+  }
+
+  .field select option { background: var(--surface2); }
+
+  .field textarea { min-height: 120px; }
+
+  .field input::placeholder, .field textarea::placeholder {
+    color: var(--muted);
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* AI Analysis box */
+  .ai-box {
+    background: rgba(26,107,58,0.08);
+    border: 1px solid rgba(26,107,58,0.3);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .ai-box.show { display: block; }
+
+  .ai-box-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2ecc71;
+    margin-bottom: 0.8rem;
+  }
+
+  .ai-dot {
+    width: 8px; height: 8px;
+    background: #2ecc71;
+    border-radius: 50%;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity:1; }
+    50% { opacity:0.3; }
+  }
+
+  .ai-category {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.3);
+    color: var(--gold);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    margin-bottom: 0.7rem;
+    margin-right: 0.4rem;
+  }
+
+  .ai-priority {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    margin-bottom: 0.7rem;
+  }
+
+  .priority-high { background: rgba(192,57,43,0.2); border: 1px solid rgba(192,57,43,0.4); color: #e74c3c; }
+  .priority-medium { background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.3); color: var(--gold); }
+  .priority-low { background: rgba(26,107,58,0.15); border: 1px solid rgba(26,107,58,0.3); color: #2ecc71; }
+
+  .ai-summary {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 0.7rem;
+  }
+
+  .ai-response-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+
+  .ai-response {
+    font-size: 0.88rem;
+    color: #2ecc71;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold), #e8940f);
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark);
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    letter-spacing: 0.02em;
+    margin-top: 1.2rem;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245,166,35,0.35);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5; cursor: not-allowed; transform: none;
+  }
+
+  /* Success state */
+  .success-card {
+    background: rgba(26,107,58,0.1);
+    border: 1px solid rgba(26,107,58,0.4);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    display: none;
+  }
+
+  .success-card.show { display: block; }
+
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .success-card h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2ecc71;
+    margin-bottom: 0.6rem;
+  }
+
+  .success-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .ticket-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(245,166,35,0.1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    display: inline-block;
+    margin: 1rem 0;
+    letter-spacing: 0.1em;
+  }
+
+  .new-complaint-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.65rem 1.5rem;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1rem;
+  }
+
+  .new-complaint-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Loading spinner */
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: var(--dark);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .spinner.show { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Notification */
+  .notif {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.4rem;
+    font-size: 0.88rem;
+    max-width: 320px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999;
+  }
+
+  .notif.show { transform: translateY(0); opacity: 1; }
+  .notif.error { border-color: rgba(192,57,43,0.4); color: #e74c3c; }
+  .notif.success { border-color: rgba(26,107,58,0.4); color: #2ecc71; }
+
+  /* Transcription display */
+  .transcription-box {
+    background: var(--surface2);
+    border: 1px dashed rgba(245,166,35,0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 60px;
+    display: none;
+  }
+
+  .transcription-box.show { display: block; }
+
+  .transcription-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  @media (max-width: 500px) {
+    .row { grid-template-columns: 1fr; }
+    .lang-grid { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="flag-stripe"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-mark">
+      <div class="logo-icon">🫀</div>
+      <span class="logo-text">AkomaSystem</span>
+    </div>
+    <h1>Submit Your <span>Complaint</span></h1>
+    <p>Speak or type in your language. Our AI will help resolve it immediately.</p>
+  </div>
+
+  <!-- LANGUAGE SELECT -->
+  <div class="lang-section">
+    <div class="section-label">Choose Your Language</div>
+    <div class="lang-grid">
+      <button class="lang-btn active" onclick="selectLanguage(this,'twi')">
+        <span class="flag">🇬🇭</span> Twi
+      </button>
+      <button class="lang-btn" onclick="selectLanguage(this,'ga')">
+        <span class="flag">🇬🇭</span> Ga
+      </button>
+      <button class="lang-btn" onclick="selectLanguage(this,'ewe')">
+        <span class="flag">🇬🇭</span> Ewe
+      </button>
+      <button class="lang-btn" onclick="selectLanguage(this,'dagbani')">
+        <span class="flag">🇬🇭</span> Dagbani
+      </button>
+      <button class="lang-btn" onclick="selectLanguage(this,'hausa')">
+        <span class="flag">🇬🇭</span> Hausa
+      </button>
+      <button class="lang-btn" onclick="selectLanguage(this,'english')">
+        <span class="flag">🇬🇧</span> English
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN FORM -->
+  <div id="formSection">
+
+    <!-- VOICE INPUT CARD -->
+    <div class="card">
+      <div class="section-label">Voice Complaint</div>
+      <div class="voice-section">
+        <button class="record-btn" id="recordBtn" onclick="toggleRecording()">🎙️</button>
+        <div class="record-status" id="recordStatus">Tap to record your complaint</div>
+        <div class="audio-timer" id="audioTimer">00:00</div>
+      </div>
+      <div class="transcription-box" id="transcriptionBox">
+        <span class="transcription-label">🤖 AI Transcription</span>
+        <span id="transcriptionText"></span>
+      </div>
+      <div class="divider">or type below</div>
+      <div class="field">
+        <label>Type your complaint (any language)</label>
+        <textarea id="complaintText" placeholder="Describe your complaint here... / Kasa wo ho asem no ha..."></textarea>
+      </div>
+      <button onclick="analyzeWithAI()" style="background:rgba(245,166,35,0.1);border:1px solid var(--border);border-radius:10px;padding:0.65rem 1.2rem;color:var(--gold);font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;width:100%">
+        ✨ Analyse with Gemini AI
+      </button>
+      <!-- AI RESULT -->
+      <div class="ai-box" id="aiBox">
+        <div class="ai-box-header"><div class="ai-dot"></div> Gemini AI Analysis</div>
+        <div id="aiCategory" class="ai-category"></div>
+        <div id="aiPriority" class="ai-priority"></div>
+        <div class="ai-response-label">Summary</div>
+        <div class="ai-summary" id="aiSummary"></div>
+        <div class="ai-response-label">Suggested Response to Customer</div>
+        <div class="ai-response" id="aiResponse"></div>
+      </div>
+    </div>
+
+    <!-- DETAILS CARD -->
+    <div class="card">
+      <div class="section-label">Your Details</div>
+      <div class="row">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" id="callerName" placeholder="Your name"/>
+        </div>
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="tel" id="callerPhone" placeholder="0XX XXX XXXX"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Region</label>
+          <select id="region">
+            <option value="">Select region...</option>
+            <option>Greater Accra</option>
+            <option>Ashanti</option>
+            <option>Western</option>
+            <option>Eastern</option>
+            <option>Central</option>
+            <option>Volta</option>
+            <option>Northern</option>
+            <option>Upper East</option>
+            <option>Upper West</option>
+            <option>Brong-Ahafo</option>
+            <option>Oti</option>
+            <option>Bono East</option>
+            <option>Ahafo</option>
+            <option>Western North</option>
+            <option>Savannah</option>
+            <option>North East</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Company / Service</label>
+          <input type="text" id="company" placeholder="e.g. ECG, MTN, etc."/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <button class="submit-btn" id="submitBtn" onclick="submitComplaint()">
+      <span id="submitText">Submit Complaint</span>
+      <div class="spinner" id="submitSpinner"></div>
+      <span id="submitIcon">→</span>
+    </button>
+
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="success-card" id="successCard">
+    <span class="success-icon">✅</span>
+    <h2>Complaint Submitted!</h2>
+    <p>Your complaint has been received and is being processed by our AI system.</p>
+    <div class="ticket-id" id="ticketId">AKM-000000</div>
+    <p>Keep this ticket number. You will receive an update via SMS or call.</p>
+    <button class="new-complaint-btn" onclick="resetForm()">+ Submit Another Complaint</button>
+  </div>
+
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── FIREBASE CONFIG ── AkomaSystem
+  const firebaseConfig = {
+    apiKey: "AIzaSyBXXbkn3eX7Rz2-Hf1XEwXOL8AV5uq_8AY",
+    authDomain: "akomasystem.firebaseapp.com",
+    projectId: "akomasystem",
+    storageBucket: "akomasystem.firebasestorage.app",
+    messagingSenderId: "161125246511",
+    appId: "1:161125246511:web:f677ff4a02c4e900e408da",
+    measurementId: "G-2EQSWHLSVD"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  window._db = db;
+  window._addDoc = addDoc;
+  window._collection = collection;
+  window._serverTimestamp = serverTimestamp;
+</script>
+
+<script>
+// ── STATE ──
+let selectedLanguage = 'twi';
+let mediaRecorder = null;
+let audioChunks = [];
+let recordingTimer = null;
+let recordingSeconds = 0;
+let isRecording = false;
+let aiAnalysis = null;
+
+const GEMINI_KEY = 'AIzaSyAKP9-ElkkHW6Q1o27t55eRKdxSZKvz9aI';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_KEY}`;
+
+// ── LANGUAGE SELECT ──
+function selectLanguage(btn, lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedLanguage = lang;
+  updatePlaceholders(lang);
+}
+
+const placeholders = {
+  twi: 'Kasa wo ho asem no ha...',
+  ga: 'Gbɛ mi ewiemi shi...',
+  ewe: 'Ŋlɔ wò nuwuwu afisia...',
+  dagbani: 'Yɔli ni yɔli ti...',
+  hausa: 'Rubuta korarkarka anan...',
+  english: 'Describe your complaint here...'
+};
+
+function updatePlaceholders(lang) {
+  document.getElementById('complaintText').placeholder = placeholders[lang] || placeholders.english;
+}
+
+// ── VOICE RECORDING — Web Speech API (works in Chrome) ──
+const speechLangCodes = {
+  twi: 'ak-GH',
+  ga: 'en-GH',
+  ewe: 'ee-GH',
+  dagbani: 'en-GH',
+  hausa: 'ha-NE',
+  english: 'en-GH'
+};
+
+let recognition = null;
+let finalTranscript = '';
+
+function toggleRecording() {
+  if (!isRecording) {
+    startRecording();
+  } else {
+    stopRecording();
+  }
+}
+
+function startRecording() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showNotif('Voice not supported on this browser. Please use Chrome.', 'error');
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  finalTranscript = '';
+
+  recognition.lang = speechLangCodes[selectedLanguage] || 'en-GH';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = () => {
+    isRecording = true;
+    const btn = document.getElementById('recordBtn');
+    btn.classList.add('recording');
+    btn.innerHTML = '⏹️';
+    document.getElementById('recordStatus').textContent = 'Listening... speak your complaint now';
+    document.getElementById('recordStatus').className = 'record-status active';
+    document.getElementById('audioTimer').classList.add('show');
+    recordingSeconds = 0;
+    recordingTimer = setInterval(() => {
+      recordingSeconds++;
+      const m = String(Math.floor(recordingSeconds/60)).padStart(2,'0');
+      const s = String(recordingSeconds%60).padStart(2,'0');
+      document.getElementById('audioTimer').textContent = m + ':' + s;
+    }, 1000);
+  };
+
+  recognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalTranscript += t + ' ';
+      } else {
+        interim += t;
+      }
+    }
+    const display = finalTranscript + interim;
+    if (display.trim()) {
+      document.getElementById('transcriptionText').textContent = display;
+      document.getElementById('transcriptionBox').classList.add('show');
+    }
+  };
+
+  recognition.onerror = (event) => {
+    if (event.error === 'no-speech') {
+      showNotif('No speech heard. Please speak louder.', 'error');
+    } else if (event.error === 'not-allowed') {
+      showNotif('Microphone blocked! Please allow microphone in browser settings.', 'error');
+      stopRecording();
+    } else if (event.error === 'language-not-supported') {
+      recognition.lang = 'en-GH';
+      showNotif('Local language not available on this device. Using English.', 'error');
+    }
+  };
+
+  recognition.onend = () => {
+    if (isRecording) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch(err) {
+    showNotif('Could not start microphone. Please use Chrome.', 'error');
+  }
+}
+
+function stopRecording() {
+  isRecording = false;
+  clearInterval(recordingTimer);
+  if (recognition) {
+    recognition.onend = null;
+    recognition.stop();
+    recognition = null;
+  }
+  const btn = document.getElementById('recordBtn');
+  btn.classList.remove('recording');
+  btn.innerHTML = '🎙️';
+  document.getElementById('audioTimer').classList.remove('show');
+
+  if (finalTranscript.trim()) {
+    document.getElementById('complaintText').value = finalTranscript.trim();
+    document.getElementById('transcriptionText').textContent = finalTranscript.trim();
+    document.getElementById('transcriptionBox').classList.add('show');
+    document.getElementById('recordStatus').textContent = '✅ Voice captured — Gemini AI is analysing...';
+    document.getElementById('recordStatus').className = 'record-status';
+    setTimeout(() => analyzeWithAI(), 600);
+  } else {
+    document.getElementById('recordStatus').textContent = 'Nothing captured. Tap mic and try again.';
+    document.getElementById('recordStatus').className = 'record-status';
+    showNotif('Nothing was recorded. Please try again.', 'error');
+  }
+}
+
+// ── GEMINI AI ANALYSIS ──
+async function analyzeWithAI() {
+  const text = document.getElementById('complaintText').value.trim();
+  if (!text) {
+    showNotif('Please record your voice or type your complaint first.', 'error');
+    return;
+  }
+
+  showNotif('🤖 Gemini AI is analysing your complaint...', 'success');
+
+  const prompt = `You are the AI backend for AkomaSystem, Ghana's first AI voice complaint management system.
+
+Analyse this complaint from a Ghanaian customer (language: ${selectedLanguage}):
+"${text}"
+
+Respond ONLY with valid JSON in this exact format:
+{
+  "category": "one of: Billing, Product Quality, Delivery, Customer Service, Technical Issue, Fraud, Other",
+  "priority": "one of: High, Medium, Low",
+  "summary": "2 sentence summary of the complaint in English",
+  "suggestedResponse": "A helpful, empathetic response to give the customer (in ${selectedLanguage === 'english' ? 'English' : selectedLanguage + ' and English'})",
+  "sentiment": "one of: Angry, Frustrated, Neutral, Satisfied",
+  "resolvedOnSpot": true or false
+}`;
+
+  try {
+    const resp = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.3 }
+      })
+    });
+
+    const data = await resp.json();
+    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const clean = raw.replace(/```json|```/g,'').trim();
+    aiAnalysis = JSON.parse(clean);
+
+    // Show AI box
+    document.getElementById('aiCategory').textContent = '📁 ' + aiAnalysis.category;
+    const priorityEl = document.getElementById('aiPriority');
+    priorityEl.textContent = '🔴 ' + aiAnalysis.priority + ' Priority';
+    priorityEl.className = 'ai-priority priority-' + aiAnalysis.priority.toLowerCase();
+    document.getElementById('aiSummary').textContent = aiAnalysis.summary;
+    document.getElementById('aiResponse').textContent = aiAnalysis.suggestedResponse;
+    document.getElementById('aiBox').classList.add('show');
+
+    showNotif('✅ AI analysis complete!', 'success');
+  } catch(err) {
+    showNotif('AI analysis failed. You can still submit the complaint.', 'error');
+    aiAnalysis = { category: 'Other', priority: 'Medium', summary: text, suggestedResponse: '', sentiment: 'Neutral', resolvedOnSpot: false };
+  }
+}
+
+// ── SUBMIT COMPLAINT ──
+async function submitComplaint() {
+  const text = document.getElementById('complaintText').value.trim();
+  const name = document.getElementById('callerName').value.trim();
+  const phone = document.getElementById('callerPhone').value.trim();
+  const region = document.getElementById('region').value;
+  const company = document.getElementById('company').value.trim();
+
+  if (!text) { showNotif('Please describe your complaint first.', 'error'); return; }
+
+  // If no AI analysis yet, run it first
+  if (!aiAnalysis) {
+    await analyzeWithAI();
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('submitText').textContent = 'Submitting...';
+  document.getElementById('submitSpinner').classList.add('show');
+  document.getElementById('submitIcon').style.display = 'none';
+
+  const ticketId = 'AKM-' + Date.now().toString().slice(-6);
+
+  const complaintData = {
+    ticketId,
+    complaintText: text,
+    language: selectedLanguage,
+    callerName: name || 'Anonymous',
+    callerPhone: phone || 'Not provided',
+    region: region || 'Not specified',
+    company: company || 'Not specified',
+    category: aiAnalysis?.category || 'Other',
+    priority: aiAnalysis?.priority || 'Medium',
+    summary: aiAnalysis?.summary || text,
+    suggestedResponse: aiAnalysis?.suggestedResponse || '',
+    sentiment: aiAnalysis?.sentiment || 'Neutral',
+    resolvedOnSpot: aiAnalysis?.resolvedOnSpot || false,
+    status: 'Open',
+    source: 'Web Form',
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    // Save to Firebase
+    if (window._db) {
+      await window._addDoc(window._collection(window._db, 'complaints'), {
+        ...complaintData,
+        serverTime: window._serverTimestamp()
+      });
+    } else {
+      // Fallback: store locally for demo
+      const existing = JSON.parse(localStorage.getItem('akoma_complaints') || '[]');
+      existing.unshift(complaintData);
+      localStorage.setItem('akoma_complaints', JSON.stringify(existing));
+    }
+
+    // Show success
+    document.getElementById('ticketId').textContent = ticketId;
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('successCard').classList.add('show');
+    showNotif('✅ Complaint submitted successfully!', 'success');
+
+  } catch(err) {
+    console.error(err);
+    showNotif('Submission failed. Please try again.', 'error');
+    btn.disabled = false;
+    document.getElementById('submitText').textContent = 'Submit Complaint';
+    document.getElementById('submitSpinner').classList.remove('show');
+    document.getElementById('submitIcon').style.display = 'inline';
+  }
+}
+
+// ── RESET ──
+function resetForm() {
+  document.getElementById('complaintText').value = '';
+  document.getElementById('callerName').value = '';
+  document.getElementById('callerPhone').value = '';
+  document.getElementById('region').value = '';
+  document.getElementById('company').value = '';
+  document.getElementById('aiBox').classList.remove('show');
+  document.getElementById('transcriptionBox').classList.remove('show');
+  document.getElementById('successCard').classList.remove('show');
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitText').textContent = 'Submit Complaint';
+  document.getElementById('submitSpinner').classList.remove('show');
+  document.getElementById('submitIcon').style.display = 'inline';
+  aiAnalysis = null;
+}
+
+// ── NOTIFICATION ──
+function showNotif(msg, type='success') {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = `notif ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// expose globals
+window.selectLanguage = selectLanguage;
+window.toggleRecording = toggleRecording;
+window.analyzeWithAI = analyzeWithAI;
+window.submitComplaint = submitComplaint;
+window.resetForm = resetForm;
+</script>
+
+</body>
+</html>
